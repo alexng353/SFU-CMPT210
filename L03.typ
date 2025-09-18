@@ -1,20 +1,10 @@
-#set heading(numbering: "1.")
+#import "_template.typ": conf
 
-#align(center, text(17pt)[
-  *CMPT 201: Probability and Computing*\
-  Lecture 03
-])
-
-#grid(
-  columns: (1fr, 1fr),
-  align(center)[
-    Lecturer: Dr. Sharan Vaswani \
-    Simon Fraser University \
-  ],
-  align(center)[
-    Notetaker: Alexander Ng \
-    Simon Fraser University \
-  ]
+#show: conf.with(
+  title: [CMPT 201: Probability and Computing],
+  number: [03],
+  lecturer: [Dr. Sharan Vaswani],
+  author: [Alexander Ng],
 )
 
 = Recap
