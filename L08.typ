@@ -95,3 +95,51 @@ $
 P[E_1 inter E_2 inter dots inter E_n] = P[E_1] P[E_2|E_1] P[E_3|E_1 inter E_2] dots
 P[E_n|E_1 inter E_2 inter dots inter E_(n-1)]
 $
+
+=== Examples
+
+*Q:* The organization that Jones works for is running a father-son dinner for
+those employees having at least one son. Each of these employees is invited to
+attend along with his youngest son. If Jones is known to have two children, what
+is the conditional probability that they are both boy sgiven that he is invited
+to the dinner? Assume that the space $S$ is given by $S = {(b,b), (b,g), (g,b),
+(g,g)}$ and all outcomes are equally likely.
+
+Jones is invited to the dinner $implies$ he has at least one son $implies$ $F =
+{(b,b), (b,g), (g,b)}$. The event $E$ we are interested in is the event that
+both of his children are boys $E = {(b,b)}$.
+
+$ P[E|F] = (P[E inter F])/(P[F]) = (1/4)/(3/4) = 1/3 $
+
+*Q:* Ms. Perez figures that there is a 30% chance that her company will set up a
+branch office in Phoenix. If it does, she has a 60% chance that she will be made
+manager of this new operation. What is the probability that there will be a
+branch in Phoenix and Perez will be its manager?
+
+$E=$ Perez will be Manager; $F=$ branch office in Phoenix; $E inter F = $ Perez
+will be an office manager in the Phoenix branch.
+
+$ P[F] = 0.3, P[E|F] = 0.6 implies P[E inter F] = P[E] P[E|F] = 0.3 times 0.6 =
+0.18 $
+
+*Q:* Suppose we have a bowl containing 6 white and 5 black balls. If we randomly
+draw a ball, what is the probability that it is black?
+
+$E = $ ball is black. $S = $ bowl containing 6 white and 5 black balls.
+
+$ P[E] = (|E|)/(|S|) = 5/11 $
+
+*Q:* If we randomly draw two balls, one after the other (without putting the
+first back), what is the probability that we:
+
++ Draw a black ball followed by a white ball\
+  $P[B_1] = 5/11, P[W_2|B_1] = 6/10 implies P[B_1 inter W_2] = P[B_1]P[W_2|B_1]
+= 30/110 = 3/11$
++ Draw a white ball followed by a black ball\
+  $P[W_1] = 6/11, P[B_2|W_1] = 5/10 implies P[W_1]P[B_2|W_1] = 3/11$
++ Draw one black ball and one white ball
+  
++ Draw two black balls
++ Draw two white balls
+
+
