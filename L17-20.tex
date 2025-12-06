@@ -1,0 +1,231 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{physics}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Corr}{Corr}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+\begin{document}
+
+\begin{center}
+    {\Large CMPT 210 — Practice Problems for Lectures 17–20}\\[4pt]
+    Conditional Expectation, Independence, Variance, Covariance, Correlation
+\end{center}
+
+\vspace{1em}
+
+Unless otherwise stated, all random variables are discrete.
+
+% ---------------------------------------------------------
+\section*{Problem 1: Conditional Expectation Warm-Up (L17)}
+
+Let $X$ be the result of rolling a fair six-sided die, so $X \in \{1,2,3,4,5,6\}$ and $\Pr[X = k] = \frac{1}{6}$.
+
+\begin{enumerate}[label=(\alph*)]
+    \item Compute $E[X]$ directly from the definition.
+    \item Let $A$ be the event ``$X$ is even''. Compute the conditional pmf $\Pr[X = k \mid A]$ for $k = 1,\dots,6$.
+    \item Compute $E[X \mid A]$.
+    \item Let $B$ be the event ``$X \ge 4$''. Compute $E[X \mid B]$.
+    \item Verify the Law of Total Expectation with the partition $\{A, A^c\}$ by checking
+    \[
+        E[X] = E[X \mid A]\Pr(A) + E[X \mid A^c]\Pr(A^c).
+    \]
+\end{enumerate}
+
+\newpage
+
+% ---------------------------------------------------------
+\section*{Problem 2: Law of Total Expectation (L17)}
+
+A factory produces light bulbs. Each day, the factory is either in a \emph{good} state (event $G$) or a \emph{bad} state (event $B$). On a randomly chosen day:
+\[
+    \Pr(G) = 0.8, \qquad \Pr(B) = 0.2.
+\]
+Let $D$ be the number of defective bulbs in a batch of $100$ bulbs produced that day. Assume:
+\[
+    D \mid G \sim \mathrm{Bin}(100, 0.01), \qquad
+    D \mid B \sim \mathrm{Bin}(100, 0.10).
+\]
+
+\begin{enumerate}[label=(\alph*)]
+    \item Express $E[D \mid G]$ and $E[D \mid B]$ in terms of the parameters of the binomial distribution.
+    \item Use the Law of Total Expectation to compute $E[D]$.
+    \item Suppose the manager only observes the total number of defects $D$, not whether the day was good or bad.
+    Explain in words what $E[D]$ represents and why the Law of Total Expectation is useful here.
+\end{enumerate}
+
+\vspace{0.5em}
+
+\textbf{Optional (challenge).} Let $C$ be the number of \emph{non-defective} bulbs in the batch.
+Express $E[C]$ in terms of $E[D]$ and verify your answer using the binomial parameters.
+
+\newpage
+
+% ---------------------------------------------------------
+\section*{Problem 3: Independence vs. Dependence (L18)}
+
+We toss three independent fair coins. Let the sample space be
+\[
+    S = \{\text{HHH, HHT, HTH, HTT, THH, THT, TTH, TTT}\},
+\]
+each outcome with probability $1/8$.
+
+Define random variables:
+\[
+    C = \text{number of heads in the three tosses},
+\]
+\[
+    M = \begin{cases}
+        1, & \text{if all three coins match (HHH or TTT)},\\
+        0, & \text{otherwise}.
+    \end{cases}
+\]
+
+\begin{enumerate}[label=(\alph*)]
+    \item List the range of $C$ and of $M$.
+    \item Compute $\Pr[C = 3]$ and $\Pr[M = 1]$.
+    \item Compute $\Pr(C = 3, M = 1)$.
+    \item Are $C$ and $M$ independent? Justify carefully using the definition of independence for random variables.
+\end{enumerate}
+
+\vspace{1em}
+
+Now define $H_1$ to be the indicator of the event ``first toss is heads'':
+\[
+    H_1 = \begin{cases}
+        1, & \text{if the first toss is H},\\
+        0, & \text{otherwise}.
+    \end{cases}
+\]
+
+\begin{enumerate}[label=(\alph*), resume]
+    \item Compute $\Pr(H_1 = 1)$, $\Pr(M = 1)$, and $\Pr(H_1 = 1, M = 1)$.
+    \item Are $H_1$ and $M$ independent? Justify using the definition of independence for r.v.'s.
+\end{enumerate}
+
+\newpage
+
+% ---------------------------------------------------------
+\section*{Problem 4: Variance Basics (L18--L19)}
+
+Let $X$ be a random variable with $E[X] = \mu$ and $\Var(X) = \sigma^2$.
+
+\begin{enumerate}[label=(\alph*)]
+    \item Using the \emph{definition} of variance
+    \[
+        \Var(X) = E\qty[(X - E[X])^2],
+    \]
+    expand the square and show that
+    \[
+        \Var(X) = E[X^2] - (E[X])^2.
+    \]
+    (This is the ``alternate definition'' of variance.)
+    \item Let $Y = aX + b$, where $a,b$ are constants. Using the alternate definition
+    $\Var(Y) = E[Y^2] - (E[Y])^2$, prove that
+    \[
+        \Var(aX + b) = a^2 \Var(X).
+    \]
+    \item Suppose $Z$ is defined as
+    \[
+        Z = \begin{cases}
+            -1, & \text{with probability } \tfrac{1}{2},\\
+            +1, & \text{with probability } \tfrac{1}{2}.
+        \end{cases}
+    \]
+    Compute $E[Z]$ and $\Var(Z)$ directly from the definitions.
+    \item Let $W = 10Z + 5$. Compute $E[W]$ and $\Var(W)$ in two ways:
+    \begin{enumerate}[label=(\roman*)]
+        \item Directly from the definition of expectation and variance.
+        \item Using the linearity of expectation and the scaling rule you proved in part (b).
+    \end{enumerate}
+    Check that the answers match.
+\end{enumerate}
+
+\newpage
+
+% ---------------------------------------------------------
+\section*{Problem 5: Variance of Sums (L19--L20)}
+
+Let $X_1, X_2, \dots, X_n$ be pairwise independent random variables with finite variance.
+Define
+\[
+    S = \sum_{i=1}^n X_i.
+\]
+
+\begin{enumerate}[label=(\alph*)]
+    \item Show that
+    \[
+        \Var(S) = \sum_{i=1}^n \Var(X_i)
+        \quad\text{if the }X_i\text{ are pairwise independent.}
+    \]
+    (Hint: first prove the formula for $n=2$:
+    $\Var(X_1 + X_2) = \Var(X_1) + \Var(X_2) + 2\Cov(X_1, X_2)$, then generalize.)
+    \item Now suppose $X_i$ are independent Bernoulli random variables with parameters
+    $p_i$, i.e.\ $\Pr(X_i=1)=p_i$, $\Pr(X_i=0)=1-p_i$.
+    Let $C = \sum_{i=1}^n X_i$ be the total number of ``successes''.
+    \begin{enumerate}[label=(\roman*)]
+        \item Express $E[C]$ in terms of the $p_i$.
+        \item Express $\Var(C)$ in terms of the $p_i$.
+    \end{enumerate}
+    \item In the special case $p_i = p$ for all $i$, identify the distribution of $C$ and
+    rewrite your expressions for $E[C]$ and $\Var(C)$ using the standard formulas for that distribution.
+\end{enumerate}
+
+\newpage
+
+% ---------------------------------------------------------
+\section*{Problem 6: Covariance and Correlation (L19--L20)}
+
+Let $X$ and $Y$ be random variables. Recall
+\[
+    \Cov(X,Y) = E[XY] - E[X]E[Y],
+\]
+and
+\[
+    \Corr(X,Y) = \frac{\Cov(X,Y)}{\sqrt{\Var(X)\Var(Y)}}.
+\]
+
+\begin{enumerate}[label=(\alph*)]
+    \item Show that $\Cov(X,X) = \Var(X)$.
+    \item Suppose $X$ and $Y$ are independent. Prove that $\Cov(X,Y) = 0$ using the definition above.
+    \item Let $A$ and $B$ be events, and define indicator random variables
+    \[
+        I_A = \begin{cases}
+            1, & \text{if event } A \text{ occurs},\\
+            0, & \text{otherwise},
+        \end{cases}
+        \qquad
+        I_B = \begin{cases}
+            1, & \text{if event } B \text{ occurs},\\
+            0, & \text{otherwise}.
+        \end{cases}
+    \]
+    Show that
+    \[
+        \Cov(I_A, I_B) = \Pr(A \cap B) - \Pr(A)\Pr(B).
+    \]
+    \item Using part (c), argue what it means (in terms of probabilities of $A$ and $B$)
+    if $\Cov(I_A, I_B) > 0$, and what it means if $\Cov(I_A, I_B) < 0$.
+    (Give a short, intuitive explanation.)
+\end{enumerate}
+
+\vspace{1em}
+
+\textbf{Optional (correlation extremes).}
+\begin{enumerate}[label=(\alph*), resume]
+    \item Let $Y = X$. Show that $\Corr(X,X) = 1$.
+    \item Let $Y = -X$. Assuming $\Var(X) > 0$, show that $\Corr(X,-X) = -1$.
+\end{enumerate}
+
+\end{document}
+

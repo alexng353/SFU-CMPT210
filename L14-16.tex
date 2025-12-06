@@ -1,0 +1,286 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{physics}
+\usepackage{bm}
+\usepackage{enumitem}
+
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Ber}{Ber}
+\DeclareMathOperator{\Bin}{Bin}
+\DeclareMathOperator{\Geo}{Geo}
+\DeclareMathOperator{\Eop}{\mathbb{E}}
+\DeclareMathOperator{\Prob}{\mathbb{P}}
+
+\newcommand{\E}[1]{\Eop\qty[#1]}
+\newcommand{\Varop}[1]{\Var\qty[#1]}
+\newcommand{\Covop}[2]{\Cov\qty[#1,#2]}
+\newcommand{\Pqty}[1]{\Prob\qty[#1]}
+
+\begin{document}
+
+\title{CMPT 210 -- Practice Problems Based on Lectures 14--16}
+\author{}
+\date{}
+\maketitle
+
+\section*{Problem 1: Basic Discrete Distributions}
+
+Consider the following experiments. For each random variable, identify its distribution
+(Bernoulli, Uniform, Binomial, or Geometric), specify its support, and write down its PDF.
+You may introduce parameters as needed (for example, $n$ or $p$).
+
+\begin{enumerate}[label=(\alph*)]
+  \item You toss a biased coin where $\Prob(\text{Heads}) = p$.
+  Let $X$ be $1$ if the outcome is Heads and $0$ otherwise.
+
+  \item You roll a standard $k$-sided fair die with faces $\{1,2,\dots,k\}$.
+  Let $Y$ be the number that appears.
+
+  \item You toss the same biased coin independently $n$ times
+  with $\Prob(\text{Heads}) = p$ on each toss.
+  Let $Z$ be the total number of Heads in the $n$ tosses.
+
+  \item You repeatedly toss the biased coin with $\Prob(\text{Heads}) = p$,
+  and stop as soon as you get the first Heads.
+  Let $T$ be the number of tosses required to obtain the first Heads.
+
+  \item For each r.v.\ above, write its expectation $\E{X}$, $\E{Y}$, $\E{Z}$, and $\E{T}$,
+  and its variance $\Varop{X}$, $\Varop{Y}$, $\Varop{Z}$, and $\Varop{T}$ in terms of
+  the parameters ($k,n,p$).
+\end{enumerate}
+
+\newpage
+
+\section*{Problem 2: Defective Disks and Money-Back Offers}
+
+A company produces computer disks. Each disk is independently defective with probability $p$.
+Disks are sold in packages of $n$ disks.
+
+Let $D$ be the random variable equal to the number of defective disks in a package.
+
+\begin{enumerate}[label=(\alph*)]
+  \item What distribution does $D$ follow? State the parameters and write its PDF.
+
+  \item Compute $\E{D}$ and $\Varop{D}$.
+
+  \item The company advertises the following money-back guarantee:
+  if a package contains \emph{more than one} defective disk, the customer can return the package
+  for a full refund. Let $G$ be the indicator random variable for the event
+  ``package is returned''.
+  \begin{enumerate}[label=\roman*.]
+    \item Express $G$ in terms of $D$.
+    \item Express $\E{G}$ as a probability in terms of $D$.
+    \item Compute $\E{G}$ explicitly as a function of $n$ and $p$.
+  \end{enumerate}
+
+  \item Suppose each package sells for \$10 and costs the company $c$ to manufacture.
+  When a package is returned, the company loses the sale (so the revenue is \$0),
+  but still pays the manufacturing cost.
+  \begin{enumerate}[label=\roman*.]
+    \item Define a random variable $R$ for the revenue from a single package.
+    \item Define a random variable $P$ for the profit from a single package.
+    \item Compute $\E{R}$ and $\E{P}$ in terms of $n,p,c$.
+  \end{enumerate}
+
+  \item (Future section: Tail inequalities) Using Markov's inequality, derive an upper bound on
+  $\Prob(D \ge 2)$ in terms of $n$ and $p$ and compare this bound to the \emph{exact}
+  probability you found in part (c).
+\end{enumerate}
+
+\newpage
+
+\section*{Problem 3: Crashing Programs and Indicator Variables}
+
+A server runs $n$ independent programs in parallel. Each program $i$ crashes during a given
+hour with probability $p_i$, independently of the others. Define indicator random variables
+\[
+  X_i = 
+  \begin{cases}
+    1, & \text{if program $i$ crashes in this hour},\\
+    0, & \text{otherwise}.
+  \end{cases}
+\]
+
+Let $C = \sum_{i=1}^n X_i$ be the total number of crashes in that hour.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Identify the distribution of each $X_i$ and compute $\E{X_i}$ and $\Varop{X_i}$.
+
+  \item Express $\E{C}$ and $\Varop{C}$ in terms of the $p_i$.
+
+  \item Suppose $p_i = p$ for all $i$.
+  \begin{enumerate}[label=\roman*.]
+    \item Simplify your expressions for $\E{C}$ and $\Varop{C}$.
+    \item Identify the distribution of $C$.
+  \end{enumerate}
+
+  \item The system administrator defines a random variable
+  \[
+    T = 
+    \begin{cases}
+      1, & \text{if at least one program crashes (i.e., $C \ge 1$)},\\
+      0, & \text{otherwise}.
+    \end{cases}
+  \]
+  \begin{enumerate}[label=\roman*.]
+    \item Express $\Pqty{T = 1}$ in terms of the $p_i$.
+    \item Compute $\E{T}$ in terms of the $p_i$.
+  \end{enumerate}
+
+  \item (Future section: Markov/Chebyshev) Suppose $p_i = p$ for all $i$.
+  Derive an upper bound on $\Prob(C \ge \lambda)$ for a threshold $\lambda > 0$ using:
+  \begin{enumerate}[label=\roman*.]
+    \item Markov's inequality.
+    \item Chebyshev's inequality.
+  \end{enumerate}
+  Express your bounds in terms of $n,p,\lambda$.
+\end{enumerate}
+
+\newpage
+
+\section*{Problem 4: Coupon Collector Variant}
+
+A coffee shop has a promotion with $n$ different coupon types (colors).
+Each time you buy a coffee, you receive one coupon. Each coupon's type is chosen
+independently and uniformly at random from the $n$ types.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Let $T$ be the total number of coupons you must collect in order to obtain at least one
+  coupon of each type. Define random variables $X_1,\dots,X_n$ such that
+  \[
+    T = X_1 + X_2 + \dots + X_n,
+  \]
+  where $X_k$ is the number of additional coupons you must collect after having obtained
+  exactly $(k-1)$ distinct types until you obtain a new coupon type.
+  Clearly describe the distribution of each $X_k$ and its parameter(s).
+
+  \item Compute $\E{X_k}$ for each $k \in \{1,\dots,n\}$.
+
+  \item Use linearity of expectation to express $\E{T}$ as a sum and simplify it as far as you can.
+
+  \item Show that
+  \[
+    \E{T} \le n \qty(1 + \ln n).
+  \]
+
+  \item (Future section: Big-O notation and asymptotics) Explain why
+  $\E{T} = \Theta\!\qty(n \log n)$ in asymptotic notation.
+\end{enumerate}
+
+\newpage
+
+\section*{Problem 5: Random Guest Lists and Enemy Pairs}
+
+Batman has $2n$ friends $V = \{v_1,\dots,v_{2n}\}$.
+Some pairs of friends are secret enemies. Let $E$ be the set of enemy pairs, so
+\[
+  E \subseteq \{(v_i,v_j) : 1 \le i < j \le 2n\}, \qquad \abs{E} = m.
+\]
+Batman does not know which pairs are enemies; he only knows that there are $m$ such pairs.
+
+Alfred suggests inviting a random subset of exactly $n$ friends:
+each possible subset of size $n$ is chosen with equal probability.
+
+Let $X$ be the number of enemy pairs among the invited guests.
+
+\begin{enumerate}[label=(\alph*)]
+  \item For each enemy pair $e = (v_i, v_j) \in E$, define an indicator random variable $I_e$
+  that is $1$ if both $v_i$ and $v_j$ are invited, and $0$ otherwise.
+  Express $X$ in terms of the $I_e$.
+
+  \item Compute $\E{I_e}$ for a fixed enemy pair $e$.
+  (Carefully argue the probability that both $v_i$ and $v_j$ are invited under this random
+  process.)
+
+  \item Use linearity of expectation to compute $\E{X}$ in terms of $n$ and $m$.
+
+  \item Show that there exists \emph{some} guest list of size $n$ such that the number of enemy
+  pairs in that guest list is at most $\E{X}$.
+
+  \item (Future section: Variance) Suppose you are additionally given that
+  $\Varop{X} \le \sigma^2$ for some known $\sigma^2$.
+  Using Chebyshev's inequality, derive a lower bound on the probability that a random guest
+  list of size $n$ contains at most $\E{X} + t$ enemy pairs, where $t > 0$ is a parameter you choose.
+\end{enumerate}
+
+\newpage
+
+\section*{Problem 6: Load Balancing and Chernoff-Type Reasoning}
+
+A website receives $N$ independent requests in a single time interval.
+Each request is assigned uniformly at random to one of $m$ identical servers,
+independently of other requests.
+
+For each request $i \in \{1,\dots,N\}$ and each server $j \in \{1,\dots,m\}$, define
+\[
+  X_{i,j} =
+  \begin{cases}
+    1, & \text{if request $i$ is assigned to server $j$},\\
+    0, & \text{otherwise}.
+  \end{cases}
+\]
+
+Let $L_j = \sum_{i=1}^N X_{i,j}$ be the number of requests assigned to server $j$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item What is the distribution of each $X_{i,j}$? What is $\E{X_{i,j}}$?
+
+  \item Show that $L_j \sim \Bin(N, 1/m)$ and compute $\E{L_j}$ and $\Varop{L_j}$.
+
+  \item Using Markov's inequality, give an upper bound on
+  $\Prob\qty(L_j \ge c \,\E{L_j})$ for some $c \ge 1$.
+
+  \item (Future section: Chernoff) Suppose $N$ is large and $m$ is such that $\E{L_j}$ is
+  at least a few hundred.
+  Sketch how a Chernoff bound of the form
+  \[
+    \Prob\qty(L_j \ge c \,\E{L_j})
+    \le \exp\!\qty(-\beta(c)\,\E{L_j})
+  \]
+  with $\beta(c) > 0$ would provide a much tighter bound than Markov's inequality.
+  You do \emph{not} need to derive the exact function $\beta(c)$; just compare the
+  ``shape'' of the two bounds.
+
+  \item Use the union bound to express an upper bound on the probability that
+  \emph{some} server is assigned at least $c \,\E{L_j}$ requests.
+\end{enumerate}
+
+\newpage
+
+\section*{Problem 7: Counting Patterns in Coin Tosses}
+
+You are given a biased coin that shows Heads with probability $p$ on every toss,
+independently of other tosses.
+You toss the coin $n$ times, where $n \ge 3$.
+
+Let $H_i$ denote the outcome of toss $i$, where $H_i = 1$ if the $i$-th toss
+is Heads and $H_i = 0$ otherwise.
+
+We are interested in the number of occurrences of the pattern HTH in the $n$-toss sequence.
+
+\begin{enumerate}[label=(\alph*)]
+  \item For each position $i \in \{1,2,\dots,n-2\}$, define an indicator random variable $X_i$
+  that is $1$ if the pattern HTH starts at position $i$, i.e.,
+  \[
+    (H_i, H_{i+1}, H_{i+2}) = (1,0,1),
+  \]
+  and $0$ otherwise. Write down $X_i$ explicitly as a function of $H_i$, $H_{i+1}$, and $H_{i+2}$.
+
+  \item Let $T = \sum_{i=1}^{n-2} X_i$ be the total number of occurrences of HTH.
+  Express $\E{T}$ using linearity of expectation.
+
+  \item Compute $\E{X_i}$ explicitly in terms of $p$.
+  (Hint: use independence of the coin tosses.)
+
+  \item Use your previous answers to obtain a closed-form expression for $\E{T}$ in terms
+  of $n$ and $p$.
+
+  \item (Future section: Covariance and variance of sums) Briefly explain why the $X_i$'s are
+  \emph{not} mutually independent. Identify at least one pair $X_i, X_j$ that are dependent
+  and one pair that are independent.
+\end{enumerate}
+
+\end{document}
