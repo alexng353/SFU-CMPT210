@@ -4,3 +4,5 @@
 #let sim = sym.tilde.op
 #let Ber = "Ber"
 #let to = sym.arrow.r
+#let Range = "Range"
+#let Var = "Var"

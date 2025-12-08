@@ -1,0 +1,291 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{physics}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+\begin{document}
+
+\begin{center}
+    {\Large CMPT 210 \u2014 Practice Problems for Lectures 21--24}\\[4pt]
+    Birthdays, Tail Inequalities (Markov/Chebyshev/Chernoff), Sampling, Load Balancing
+\end{center}
+
+\vspace{0.75em}
+
+Unless otherwise stated, all random variables are discrete. Use exact expressions unless asked for a numerical approximation.
+
+% ---------------------------------------------------------
+\section*{Problem 1: Matching Birthdays (L21)}
+
+In a class of $n$ students, assume:
+(i) birthdays are uniform over $d=365$ days (no leap years),
+(ii) students' birthdays are independent.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Compute $\Pr(\text{no two students share a birthday})$ as a product, and hence write
+  $\Pr(\text{at least one shared birthday})$.
+
+  \item Let $M$ be the number of \emph{pairs} of students with matching birthdays.
+  For $1 \le i < j \le n$, define the indicator r.v.
+  \[
+    X_{i,j} = \begin{cases}
+      1, & \text{if students } i \text{ and } j \text{ share a birthday},\\
+      0, & \text{otherwise}.
+    \end{cases}
+  \]
+  Show that $M = \sum_{1\le i<j\le n} X_{i,j}$, and compute $E[M]$.
+
+  \item Show that the family $\{X_{i,j}\}$ is \emph{not} mutually independent by giving a concrete
+  conditional probability that changes after conditioning on two other indicators.
+
+  \item Argue (carefully) that $X_{i,j}$ and $X_{i',j'}$ are pairwise independent when $\{i,j\} \cap \{i',j'\} = \varnothing$.
+
+  \item Using that each $X_{i,j}$ is Bernoulli and (assuming the relevant pairwise independence),
+  compute $\Var(M)$ in closed form.
+
+  \item Plug in $n=100$ to get formulas for $E[M]$ and $\sqrt{\Var(M)}$ (standard deviation).
+\end{enumerate}
+
+\newpage
+
+% ---------------------------------------------------------
+\section*{Problem 2: Markov's Inequality + Shifting Trick (L21)}
+
+\begin{enumerate}[label=(\alph*)]
+  \item (Proof) Let $X$ be a non-negative r.v. Prove Markov's Inequality:
+  \[
+    \Pr[X \ge x] \le \frac{E[X]}{x}\qquad\text{for all } x>0,
+  \]
+  by introducing the indicator r.v.\ $I_{\{X\ge x\}}$ and comparing $x I_{\{X\ge x\}}$ to $X$.
+
+  \item Let $X$ be non-negative with $E[X]=99.99$. Use Markov's Inequality to show
+  \[
+    \Pr[X \ge 300] \le \frac{1}{3}.
+  \]
+
+  \item (Shift to tighten) Suppose $X$ is a r.v.\ such that $X \ge 100$ always and $E[X]=150$.
+  Define a shifted variable $Y := X-100$ and use Markov's Inequality on $Y$ to bound $\Pr[X \ge 200]$.
+  Compare this bound to what you would get by applying Markov directly to $X$.
+\end{enumerate}
+
+\newpage
+
+% ---------------------------------------------------------
+\section*{Problem 3: Chebyshev's Inequality (L21--L22)}
+
+\begin{enumerate}[label=(\alph*)]
+  \item (Derivation from Markov) Starting from Markov's inequality, derive Chebyshev's inequality:
+  \[
+    \Pr\qty(\abs{X - E[X]} \ge y) \le \frac{\Var(X)}{y^2}\qquad\text{for all } y>0,
+  \]
+  by applying Markov to the non-negative r.v.\ $\abs{X - E[X]}^2$.
+
+  \item Let $X$ be a r.v.\ with $E[X]=100$ and standard deviation $\sigma_X=15$.
+  Use Chebyshev's inequality to bound $\Pr[X \ge 300]$.
+
+  \item Let $X \sim \mathrm{Bin}(20,0.75)$.
+  \begin{enumerate}[label=(\roman*)]
+    \item Compute $E[X]$ and $\Var(X)$ using binomial formulas.
+    \item Use Chebyshev to give a lower bound on $\Pr(10 < X < 20)$ by rewriting it
+    as $1-\Pr(\text{bad event})$ for a suitable deviation from the mean.
+  \end{enumerate}
+\end{enumerate}
+
+\newpage
+
+% ---------------------------------------------------------
+\section*{Problem 4: Chernoff Bound for Coin Tossing (L22--L23)}
+
+Let $T$ be the number of heads in $n=1000$ independent tosses of a fair coin.
+Let $T_i$ be the indicator of ``toss $i$ is heads'', so $T = \sum_{i=1}^{1000} T_i$.
+
+Chernoff bound (as used in lecture): for mutually independent $T_i \in [0,1]$,
+\[
+  \Pr[T \ge cE[T]] \le \exp\qty(-\beta(c)\,E[T]),
+  \qquad \beta(c) := c\ln(c) - c + 1,\quad c\ge 1.
+\]
+
+\begin{enumerate}[label=(\alph*)]
+  \item Compute $E[T]$.
+
+  \item We want to upper-bound $\Pr[T \ge 1.2\,E[T]]$.
+  Identify the value of $c$ and write the Chernoff bound in the form $\exp(-\beta(c)E[T])$.
+
+  \item Compute $\beta(1.2)$ (you may leave it as $1.2\ln(1.2)-0.2$ if you want),
+  and write a numerical approximation of the final bound.
+
+  \item Compare with Chebyshev: compute $\Var(T)$ and use Chebyshev to upper-bound
+  $\Pr[T \ge 1.2\,E[T]]$. Which bound is tighter here, and why (in one or two sentences)?
+\end{enumerate}
+
+\newpage
+
+% ---------------------------------------------------------
+\section*{Problem 5: Chernoff Bound for Rare Events (Lottery-Style) (L23)}
+
+A game is played by $n=10{,}000{,}000$ players. Each player independently wins with probability $p=1/10000$.
+Let $T_i$ be the indicator that player $i$ wins, and let $T=\sum_{i=1}^n T_i$ be the total number of winners.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Compute $E[T]$.
+
+  \item Use the Chernoff bound to upper-bound $\Pr[T \ge 2000]$.
+  (Hint: write $2000$ as $cE[T]$ and identify $c$.)
+
+  \item Compute $\beta(2)=2\ln(2)-1$ and write the resulting bound in the form $\exp(-\text{something})$.
+  You may also convert it to a rough power of $10$ if you wish.
+
+  \item Give a short interpretation: what does a bound of the form $\exp(-\Theta(E[T]))$ say about the
+  likelihood of being \emph{twice} the mean when $E[T]$ is large?
+\end{enumerate}
+
+\newpage
+
+% ---------------------------------------------------------
+\section*{Problem 6: Voter Poll Sample Size via Chebyshev (L23)}
+
+We wish to estimate an unknown fraction $p \in (0,1)$.
+We sample (with replacement) $n$ people uniformly at random and define $X_i$ to be the indicator that
+person $i$ favors candidate A. Thus $\Pr(X_i=1)=p$ and the $X_i$ are mutually independent.
+Let $S_n = \sum_{i=1}^n X_i$ and $\hat p := S_n/n$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Identify the distribution of $S_n$ and compute $E[\hat p]$.
+
+  \item Compute $\Var(\hat p)$ in terms of $p$ and $n$.
+
+  \item Using Chebyshev's inequality, show that
+  \[
+    \Pr\qty(\abs{\hat p - p} \ge \varepsilon) \le \frac{p(1-p)}{n\varepsilon^2}.
+  \]
+
+  \item We want $\Pr(\abs{\hat p - p} < \varepsilon) \ge 1-\delta$.
+  Derive a sufficient condition on $n$ in terms of $\varepsilon,\delta$, and explain why
+  \[
+    n \ge \frac{1}{4\varepsilon^2\delta}
+  \]
+  is sufficient \emph{without knowing $p$}.
+
+  \item Plug in $\varepsilon=0.02$ and $\delta=0.01$ and compute the resulting $n$.
+\end{enumerate}
+
+\newpage
+
+% ---------------------------------------------------------
+\section*{Problem 7: Pairwise Independent Sampling \& WLLN (L23)}
+
+Let $G_1,\dots,G_n$ be pairwise independent r.v.'s with common mean $\mu$ and variance $\sigma^2$.
+Define
+\[
+  S_n := \sum_{i=1}^n G_i,
+  \qquad
+  X_n := \frac{S_n}{n}.
+\]
+
+\begin{enumerate}[label=(\alph*)]
+  \item Compute $E[X_n]$.
+
+  \item Using pairwise independence, compute $\Var(S_n)$ and hence $\Var(X_n)$.
+
+  \item Apply Chebyshev to show
+  \[
+    \Pr\qty(\abs{X_n - \mu} \ge \varepsilon) \le \frac{\sigma^2}{n\varepsilon^2}.
+  \]
+
+  \item Use your bound to conclude (informally, one or two sentences) why
+  $\lim_{n\to\infty}\Pr(\abs{X_n-\mu} \le \varepsilon)=1$ for every fixed $\varepsilon>0$
+  (a weak law of large numbers statement).
+\end{enumerate}
+
+\newpage
+
+% ---------------------------------------------------------
+\section*{Problem 8: Comparing Tail Inequalities + Load Balancing (L24)}
+
+\subsection*{Part A: Markov vs.\ Chebyshev vs.\ Chernoff}
+
+Let $T_1,\dots,T_n$ be r.v.'s with $T_i \in \{0,1\}$ and $\Pr[T_i=1]=p_i$.
+Let $T=\sum_{i=1}^n T_i$, so $E[T]=\sum_{i=1}^n p_i$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item (No independence needed) Use Markov to show that for $c\ge 1$,
+  \[
+    \Pr[T \ge cE[T]] \le \frac{1}{c}.
+  \]
+
+  \item (Pairwise independence) Assume the $T_i$ are pairwise independent.
+  Show $\Var(T)=\sum_{i=1}^n p_i(1-p_i)$ and derive the Chebyshev-style bound
+  \[
+    \Pr[T \ge cE[T]] \le
+    \frac{\sum_{i=1}^n p_i(1-p_i)}{(c-1)^2(E[T])^2}.
+  \]
+
+  \item (Mutual independence) Assume the $T_i$ are mutually independent and $T_i\in[0,1]$.
+  State the Chernoff bound in terms of $\beta(c)=c\ln(c)-c+1$:
+  \[
+    \Pr[T \ge cE[T]] \le \exp\qty(-\beta(c)E[T]).
+  \]
+
+  \item Specialize to $p_i=\tfrac12$ for all $i$.
+  Compare the three bounds for
+  \[
+    \Pr\qty(T \ge 0.6n).
+  \]
+  (Hint: here $E[T]=0.5n$ so $c=1.2$. Write each bound as a function of $n$.)
+\end{enumerate}
+
+\vspace{0.75em}
+
+\subsection*{Part B: Randomized Load Balancing (Fussbook)}
+
+A system receives $n=24000$ tasks in each 10-minute interval. Each task is assigned independently and uniformly
+to one of $m$ servers. Each server processes its assigned tasks sequentially.
+
+Each task takes at most $1$ second, and takes $1/4$ second on average.
+
+A server is considered \emph{overloaded} if it is assigned more than $600$ seconds of work in the interval.
+
+Let $T$ be the total processing time assigned to \emph{server 1} in the interval.
+For each task $i$, define
+\[
+  T_i :=
+  \begin{cases}
+    \text{(processing time of task $i$)}, & \text{if task $i$ is assigned to server 1},\\
+    0, & \text{otherwise}.
+  \end{cases}
+\]
+Thus $T=\sum_{i=1}^n T_i$ and $0 \le T_i \le 1$.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Compute $E[T_i]$ and then $E[T]$ as a function of $m$.
+
+  \item Show that the overload event $T>600$ can be written as $T \ge cE[T]$ for a suitable $c$,
+  and find $c$ in terms of $m$.
+
+  \item Using the Chernoff bound, write an upper bound on $\Pr[T \ge 600]$ in the form
+  \[
+    \Pr[T \ge 600] \le \exp\qty(-\beta(c)\,E[T]).
+  \]
+
+  \item Use a union bound to show
+  \[
+    \Pr(\text{some server is overloaded}) \le m \Pr(T \ge 600).
+  \]
+
+  \item (Numerical check) Evaluate your bound for $m=12$ and $m=15$ (you may approximate $\beta(\cdot)$).
+  Which $m$ gives a meaningfully smaller upper bound?
+\end{enumerate}
+
+\end{document}
+
